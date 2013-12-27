@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
 		SharedPreferences sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		int loyalityPoints = sharedPrefs.getInt("points", 0);
-		trackInfo = sharedPrefs.getString("trackInfo", "devin townsend ki");
+		trackInfo = sharedPrefs.getString("trackInfo", "soundgarden outshined");
 		rBar = (RatingBar) findViewById(R.id.ratingBar1);
 		rBar.setNumStars(loyalityPoints);
 
@@ -125,6 +125,8 @@ public class MainActivity extends Activity {
 					Toast.makeText(this, "5 points you can claim a free coffee !!",
 							Toast.LENGTH_LONG).show();
 				} 
+				
+				Log.d(TAG,"Sending Message");
 				sendMessage(trackInfo);
 
 			} else if (contents.matches("987654321")) {
@@ -153,6 +155,8 @@ public class MainActivity extends Activity {
 			}else {
 				Log.d(TAG,"out=null");
 			}
+			
+			//out.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

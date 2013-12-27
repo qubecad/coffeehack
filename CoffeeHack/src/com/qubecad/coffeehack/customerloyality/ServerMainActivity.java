@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ServerMainActivity extends Activity {
@@ -26,6 +27,8 @@ public class ServerMainActivity extends Activity {
 	Handler updateConversationHandler;
 
 	Thread serverThread = null;
+	
+	TextView logconsole;
 private Context ctxt;
 	
 
@@ -36,7 +39,7 @@ private Context ctxt;
 		setContentView(R.layout.activity_server_main);
 		ctxt=this;
 		updateConversationHandler = new Handler();
-		
+		 logconsole = (TextView) findViewById(R.id.logconsoletextview);
 		 
 		
 		        this.serverThread = new Thread(new ServerThread());
@@ -128,32 +131,13 @@ private Context ctxt;
 			Log.d("server",msg);
 			//PlayInDeezer(msg,ctxt);
 			
+			logconsole.setText(logconsole.getText()+"\n"+msg);
+			
+			
 			MusicPlayerHelper.SearchDeezerAndPlay(msg, ctxt);
 		}
 	}
 
 	
-	public static void PlayInDeezer(String deezerID, Context context) {
-
-        String uri = "http://www.deezer.com/track/" + deezerID;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setComponent(new ComponentName("deezer.android.app", "com.deezer.android.ui.activity.LauncherActivity"));
-        intent.setData(Uri.parse(uri));
-        if (isCallable(intent, context)) {
-            context.startActivity(intent);
-        }
-
-    }
 	
-	 private static boolean isCallable(Intent intent, Context context) {
-	        List<ResolveInfo> list = context.getPackageManager().queryIntentActivities(intent,
-	                PackageManager.MATCH_DEFAULT_ONLY);
-	        if (list.size() > 0) {
-
-
-	            return true;
-	        } else
-	            return false;
-
-	    }
 }
