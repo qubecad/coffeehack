@@ -8,11 +8,13 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -31,14 +33,14 @@ public class MainActivity extends Activity {
 
 	private static final int SERVERPORT = 6000;
 
-	private static final String SERVER_IP = "192.168.1.108";
+	private static final String SERVER_IP = "192.168.1.71";
 	private String trackInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		new Thread(new ClientThread()).start();
 		Button logtoken = (Button) findViewById(R.id.button1);
 
 		logtoken.setOnClickListener(new OnClickListener() {
@@ -59,6 +61,13 @@ public class MainActivity extends Activity {
 				.getDefaultSharedPreferences(this);
 		int loyalityPoints = sharedPrefs.getInt("points", 0);
 		trackInfo = sharedPrefs.getString("trackInfo", "soundgarden outshined");
+		
+		Resources res = getResources() ;
+		String[] trackdata = res. getStringArray (R.array.Tracks);
+		
+		Random ran = new Random();
+		int x = ran.nextInt(3);
+		trackInfo=trackdata[x];
 		rBar = (RatingBar) findViewById(R.id.ratingBar1);
 		rBar.setNumStars(loyalityPoints);
 
@@ -71,7 +80,7 @@ public class MainActivity extends Activity {
 		Editor editor = sharedPrefs.edit();
 		sharedPrefs.edit().putInt("points", value);
 		editor.commit();
-		new Thread(new ClientThread()).start();
+		//new Thread(new ClientThread()).start();
 
 
 	}
@@ -87,7 +96,7 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 
 		super.onResume();
-
+		new Thread(new ClientThread()).start();
 		updateLoyalityPoint();
 
 	}

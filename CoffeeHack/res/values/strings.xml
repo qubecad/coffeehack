@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CoffeeHack</string>
+    <string name="app_name">IWDEV CoffeeHack</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_server_main">ServerMainActivity</string>
+    <string-array name="Tracks">
+        <item >soundgarden outshined</item>
+        <item >crackerman</item>
+        <item >soundgarden black hole sun</item>
+        <item >pearl jam</item>
+    </string-array>
 
 </resources>
