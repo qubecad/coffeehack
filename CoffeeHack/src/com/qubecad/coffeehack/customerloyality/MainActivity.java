@@ -2,6 +2,7 @@ package com.qubecad.coffeehack.customerloyality;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -30,7 +31,8 @@ public class MainActivity extends Activity {
 
 	private static final int SERVERPORT = 6000;
 
-	private static final String SERVER_IP = "10.0.2.2";
+	private static final String SERVER_IP = "192.168.1.108";
+	private String trackInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class MainActivity extends Activity {
 		SharedPreferences sharedPrefs = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		int loyalityPoints = sharedPrefs.getInt("points", 0);
+		trackInfo = sharedPrefs.getString("trackInfo", "devin townsend ki");
 		rBar = (RatingBar) findViewById(R.id.ratingBar1);
 		rBar.setNumStars(loyalityPoints);
 
@@ -68,6 +71,8 @@ public class MainActivity extends Activity {
 		Editor editor = sharedPrefs.edit();
 		sharedPrefs.edit().putInt("points", value);
 		editor.commit();
+		new Thread(new ClientThread()).start();
+
 
 	}
 
@@ -115,33 +120,43 @@ public class MainActivity extends Activity {
 				rBar.setRating(points);
 				saveLoyalityPoints(points);
 				
-				sendMessage("Blarg!");
+				
 				if (points >= 5) {
-					Toast.makeText(this, "5 points you can claim free coffee",
+					Toast.makeText(this, "5 points you can claim a free coffee !!",
 							Toast.LENGTH_LONG).show();
-				} else {
-
-				}
+				} 
+				sendMessage(trackInfo);
 
 			} else if (contents.matches("987654321")) {
 				rBar.setRating(0);
 				saveLoyalityPoints(0);
 			}
+			
 
 		}
 	}
 	
 	private void sendMessage (String str){
-		PrintWriter out;
+		PrintWriter out=null;
 		try {
+			
+			OutputStream outsock=socket.getOutputStream();
+			
 			out = new PrintWriter(new BufferedWriter(
 					
-					                    new OutputStreamWriter(socket.getOutputStream())),
+					                    new OutputStreamWriter(outsock)),
 					
 					                    true);
-			 out.println(str);
+			
+			if(out!=null){
+			out.println(str);
+			}else {
+				Log.d(TAG,"out=null");
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NullPointerException e){
 			e.printStackTrace();
 		}
 				
